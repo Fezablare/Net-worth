@@ -1,4 +1,4 @@
-import { BlobNotFoundError, head, put } from "@vercel/blob";
+import { BlobNotFoundError, get, put } from "@vercel/blob";
 import { createSeedData } from "./seed";
 import type { AppData } from "./types";
 
@@ -45,21 +45,25 @@ async function seedBlobData(): Promise<AppData> {
   return seed;
 }
 
-async function downloadBlob(): Promise<AppData> {
-  const blob = await head(BLOB_PATHNAME);
-  const response = await fetch(blob.downloadUrl);
-  if (response.status === 404) {
+async function readBlobData(): Promise<AppData> {
+  const result = await get(BLOB_PATHNAME, {
+    access: "private",
+    useCache: false,
+  });
+  if (!result) {
     throw new BlobNotFoundError();
   }
-  if (!response.ok) {
-    throw new Error(`Failed to read blob (${response.status})`);
+  if (result.statusCode !== 200 || !result.stream) {
+    throw new Error("Failed to read blob");
   }
-  return (await response.json()) as AppData;
+
+  const text = await new Response(result.stream).text();
+  return JSON.parse(text) as AppData;
 }
 
 export async function readDataFromBlob(): Promise<AppData> {
   try {
-    return await downloadBlob();
+    return await readBlobData();
   } catch (error) {
     if (!isMissingBlobError(error)) {
       throw error;
