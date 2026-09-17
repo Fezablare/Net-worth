@@ -1,3 +1,4 @@
+import type { CategoryId } from "./categories";
 import type {
   AppData,
   Holding,
@@ -89,15 +90,16 @@ export function computeAllocation(totals: SnapshotTotals) {
   const debts = totals.otherDebts;
 
   return [
-    { name: "Cash", value: totals.cash, type: "asset" as const },
-    { name: "Super", value: totals.super, type: "asset" as const },
+    { id: "cash" as CategoryId, name: "Cash", value: totals.cash, type: "asset" as const },
+    { id: "super" as CategoryId, name: "Super", value: totals.super, type: "asset" as const },
     {
+      id: "property" as CategoryId,
       name: "Property equity",
       value: totals.propertyEquity,
       type: "asset" as const,
     },
-    { name: "Shares", value: totals.shares, type: "asset" as const },
-    { name: "Other debts", value: debts, type: "debt" as const },
+    { id: "shares" as CategoryId, name: "Shares", value: totals.shares, type: "asset" as const },
+    { id: "debt" as CategoryId, name: "Other debts", value: debts, type: "debt" as const },
   ].filter((item) => item.value !== 0 || assets + debts === 0);
 }
 

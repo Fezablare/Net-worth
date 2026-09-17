@@ -39,6 +39,11 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-cat-cash: var(--cat-cash);
+  --color-cat-super: var(--cat-super);
+  --color-cat-property: var(--cat-property);
+  --color-cat-shares: var(--cat-shares);
+  --color-cat-debt: var(--cat-debt);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -81,6 +86,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --cat-cash: oklch(0.52 0.13 250);
+  --cat-super: oklch(0.50 0.11 165);
+  --cat-property: oklch(0.62 0.14 60);
+  --cat-shares: oklch(0.54 0.16 305);
+  --cat-debt: oklch(0.55 0.19 25);
 }
 
 .dark {
@@ -115,6 +125,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --cat-cash: oklch(0.74 0.10 250);
+  --cat-super: oklch(0.74 0.10 165);
+  --cat-property: oklch(0.80 0.12 60);
+  --cat-shares: oklch(0.76 0.12 305);
+  --cat-debt: oklch(0.74 0.14 25);
 }
 
 @layer base {
