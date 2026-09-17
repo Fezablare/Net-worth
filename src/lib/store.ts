@@ -7,13 +7,17 @@ import {
 import type { AppData } from "./types";
 
 function isBlobStoreEnabled(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return Boolean(
+    process.env.BLOB_READ_WRITE_TOKEN ||
+      process.env.BLOB_STORE_ID ||
+      process.env.VERCEL === "1",
+  );
 }
 
 function assertPersistentStoreConfigured(): void {
   if (process.env.VERCEL === "1" && !isBlobStoreEnabled()) {
     throw new Error(
-      "Vercel deployment requires a Blob store. Create one in the Vercel project so BLOB_READ_WRITE_TOKEN is set.",
+      "Vercel deployment requires a Blob store. Create one in the Vercel project (BLOB_STORE_ID or BLOB_READ_WRITE_TOKEN).",
     );
   }
 }

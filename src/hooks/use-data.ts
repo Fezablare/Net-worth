@@ -13,8 +13,10 @@ export function useData() {
     setError(null);
     try {
       const res = await fetch("/api/data");
-      if (!res.ok) throw new Error("Failed to load data");
-      const json = (await res.json()) as AppData;
+      const json = (await res.json()) as AppData & { error?: string };
+      if (!res.ok) {
+        throw new Error(json.error ?? `Failed to load data (${res.status})`);
+      }
       setData(json);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -29,8 +31,10 @@ export function useData() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(next),
     });
-    if (!res.ok) throw new Error("Failed to save");
-    const json = (await res.json()) as AppData;
+    const json = (await res.json()) as AppData & { error?: string };
+    if (!res.ok) {
+      throw new Error(json.error ?? `Failed to save (${res.status})`);
+    }
     setData(json);
     return json;
   }, []);
