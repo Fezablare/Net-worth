@@ -13,15 +13,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { HoldingsEditor } from "@/components/holdings-editor";
 import { LineItemEditor } from "@/components/line-item-editor";
 import { NetWorthBar } from "@/components/net-worth-bar";
-import { computeTotals, getHoldingPrice } from "@/lib/calculations";
-import { currentMonthKey, formatAud, formatMonthKey } from "@/lib/format";
-import type { AppData, Holding, Portfolio } from "@/lib/types";
+import { computeTotals } from "@/lib/calculations";
+import { currentMonthKey, formatMonthKey } from "@/lib/format";
+import type { AppData, Portfolio } from "@/lib/types";
 
 function newId(prefix: string) {
   return `${prefix}-${crypto.randomUUID().slice(0, 8)}`;
@@ -103,7 +101,7 @@ export function ThisMonthEditor({ data, onSave }: ThisMonthEditorProps) {
   }
 
   return (
-    <div className="space-y-8 pb-24 md:pb-6">
+    <div className="space-y-5 pb-24 md:pb-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-xl font-semibold">This month</h2>
@@ -131,6 +129,7 @@ export function ThisMonthEditor({ data, onSave }: ThisMonthEditorProps) {
 
       <LineItemEditor
         title="Cash accounts"
+        category="cash"
         items={portfolio.cash}
         fields={[
           { key: "name", label: "Account name" },
@@ -148,6 +147,7 @@ export function ThisMonthEditor({ data, onSave }: ThisMonthEditorProps) {
 
       <LineItemEditor
         title="Super funds"
+        category="super"
         items={portfolio.super}
         fields={[
           { key: "name", label: "Fund name" },
@@ -165,6 +165,7 @@ export function ThisMonthEditor({ data, onSave }: ThisMonthEditorProps) {
 
       <LineItemEditor
         title="Properties"
+        category="property"
         items={portfolio.properties}
         maxItems={3}
         fields={[
@@ -183,14 +184,9 @@ export function ThisMonthEditor({ data, onSave }: ThisMonthEditorProps) {
         })}
       />
 
-      <LineItemEditor
-        title="ASX holdings"
-        items={portfolio.holdings}
-        fields={[
-          { key: "ticker", label: "Ticker (e.g. VAS.AX)" },
-          { key: "quantity", label: "Quantity", type: "number", step: "any" },
-          { key: "ownershipPercent", label: "Ownership %", type: "number", step: "1" },
-        ]}
+      <HoldingsEditor
+        holdings={portfolio.holdings}
+        quoteCache={quoteCache}
         onChange={(holdings) => setPortfolio({ ...portfolio, holdings })}
         onAdd={() => ({
           id: newId("hold"),
@@ -198,49 +194,11 @@ export function ThisMonthEditor({ data, onSave }: ThisMonthEditorProps) {
           quantity: 0,
           ownershipPercent: 100,
         })}
-        extra={(item: Holding) => {
-          const { price, stale, asOf } = getHoldingPrice(item, quoteCache);
-          const marketValue = price * item.quantity * (item.ownershipPercent / 100);
-          return (
-            <div className="rounded-lg bg-muted/50 p-3 space-y-2 text-sm">
-              <div className="flex flex-wrap items-center gap-2">
-                <span>
-                  Price: {price > 0 ? formatAud(price, true) : "—"}
-                </span>
-                {stale && <Badge variant="secondary">Stale</Badge>}
-                {asOf && (
-                  <span className="text-muted-foreground">
-                    as of {new Date(asOf).toLocaleString("en-AU")}
-                  </span>
-                )}
-              </div>
-              <p className="font-medium tabular-nums">Your value: {formatAud(marketValue)}</p>
-              <div className="space-y-1.5 max-w-xs">
-                <Label htmlFor={`manual-${item.id}`}>Manual price override (AUD)</Label>
-                <Input
-                  id={`manual-${item.id}`}
-                  type="number"
-                  step="0.01"
-                  placeholder="Use if quote missing"
-                  value={item.manualPrice ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value === "" ? undefined : Number(e.target.value);
-                    setPortfolio({
-                      ...portfolio,
-                      holdings: portfolio.holdings.map((h) =>
-                        h.id === item.id ? { ...h, manualPrice: val } : h,
-                      ),
-                    });
-                  }}
-                />
-              </div>
-            </div>
-          );
-        }}
       />
 
       <LineItemEditor
         title="Other debts"
+        category="debt"
         items={portfolio.otherDebts}
         fields={[
           { key: "name", label: "Debt name" },

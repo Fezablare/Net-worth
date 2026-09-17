@@ -145,27 +145,42 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <dl className="grid gap-2 text-sm sm:grid-cols-2">
-              <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <dt>Cash</dt>
+              <div className="flex justify-between rounded-lg bg-cat-cash/10 px-3 py-2">
+                <dt className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-cat-cash" />
+                  Cash
+                </dt>
                 <dd className="font-medium tabular-nums">{formatAud(allocationSource.cash)}</dd>
               </div>
-              <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <dt>Super</dt>
+              <div className="flex justify-between rounded-lg bg-cat-super/10 px-3 py-2">
+                <dt className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-cat-super" />
+                  Super
+                </dt>
                 <dd className="font-medium tabular-nums">{formatAud(allocationSource.super)}</dd>
               </div>
-              <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <dt>Property equity</dt>
+              <div className="flex justify-between rounded-lg bg-cat-property/10 px-3 py-2">
+                <dt className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-cat-property" />
+                  Property equity
+                </dt>
                 <dd className="font-medium tabular-nums">
                   {formatAud(allocationSource.propertyEquity)}
                 </dd>
               </div>
-              <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <dt>Shares</dt>
+              <div className="flex justify-between rounded-lg bg-cat-shares/10 px-3 py-2">
+                <dt className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-cat-shares" />
+                  Shares
+                </dt>
                 <dd className="font-medium tabular-nums">{formatAud(allocationSource.shares)}</dd>
               </div>
-              <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2 sm:col-span-2">
-                <dt>Other debts</dt>
-                <dd className="font-medium tabular-nums text-destructive">
+              <div className="flex justify-between rounded-lg bg-cat-debt/10 px-3 py-2 sm:col-span-2">
+                <dt className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-cat-debt" />
+                  Other debts
+                </dt>
+                <dd className="font-medium tabular-nums text-cat-debt">
                   −{formatAud(allocationSource.otherDebts)}
                 </dd>
               </div>
