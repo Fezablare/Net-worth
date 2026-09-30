@@ -14,9 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { OwnerSelect } from "@/components/owner-select";
 import { getHoldingPrice } from "@/lib/calculations";
 import { formatAud } from "@/lib/format";
-import type { Holding, QuoteCache } from "@/lib/types";
+import type { Holding, Owner, QuoteCache } from "@/lib/types";
 
 interface HoldingsEditorProps {
   holdings: Holding[];
@@ -47,7 +48,7 @@ export function HoldingsEditor({
 
   const totalValue = holdings.reduce((sum, holding) => {
     const { price } = getHoldingPrice(holding, quoteCache);
-    return sum + price * holding.quantity * (holding.ownershipPercent / 100);
+    return sum + price * holding.quantity;
   }, 0);
 
   return (
@@ -75,9 +76,9 @@ export function HoldingsEditor({
             <TableRow className="hover:bg-transparent">
               <TableHead>Ticker</TableHead>
               <TableHead className="text-right">Qty</TableHead>
-              <TableHead className="text-right">Own %</TableHead>
+              <TableHead>Owner</TableHead>
               <TableHead className="text-right">Price</TableHead>
-              <TableHead className="text-right">Your value</TableHead>
+              <TableHead className="text-right">Value</TableHead>
               <TableHead className="text-right">Manual $</TableHead>
               <TableHead className="w-10">
                 <span className="sr-only">Remove</span>
@@ -87,7 +88,7 @@ export function HoldingsEditor({
           <TableBody>
             {holdings.map((holding) => {
               const { price, stale, asOf } = getHoldingPrice(holding, quoteCache);
-              const marketValue = price * holding.quantity * (holding.ownershipPercent / 100);
+              const marketValue = price * holding.quantity;
               const name = holding.ticker || "Holding";
 
               return (
@@ -115,17 +116,11 @@ export function HoldingsEditor({
                       }
                     />
                   </TableCell>
-                  <TableCell className="min-w-20">
-                    <Input
-                      aria-label={`${name} ownership percent`}
-                      type="number"
-                      step="1"
-                      className="text-right tabular-nums"
-                      value={holding.ownershipPercent}
-                      onChange={(e) =>
-                        updateHolding(holding.id, {
-                          ownershipPercent: parseNumber(e.target.value),
-                        })
+                  <TableCell className="min-w-24">
+                    <OwnerSelect
+                      value={holding.owner}
+                      onChange={(owner: Owner) =>
+                        updateHolding(holding.id, { owner })
                       }
                     />
                   </TableCell>
