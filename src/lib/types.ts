@@ -1,15 +1,19 @@
+export type Owner = "Felix" | "Kaki" | "Joint";
+
+export const OWNERS: Owner[] = ["Felix", "Kaki", "Joint"];
+
 export interface CashAccount {
   id: string;
   name: string;
   balance: number;
-  ownershipPercent: number;
+  owner: Owner;
 }
 
 export interface SuperFund {
   id: string;
   name: string;
   balance: number;
-  ownershipPercent: number;
+  owner: Owner;
 }
 
 export interface Property {
@@ -17,14 +21,14 @@ export interface Property {
   name: string;
   value: number;
   mortgage: number;
-  ownershipPercent: number;
+  owner: Owner;
 }
 
 export interface Holding {
   id: string;
   ticker: string;
   quantity: number;
-  ownershipPercent: number;
+  owner: Owner;
   manualPrice?: number;
 }
 
@@ -32,7 +36,7 @@ export interface OtherDebt {
   id: string;
   name: string;
   balance: number;
-  ownershipPercent: number;
+  owner: Owner;
 }
 
 export interface QuoteInfo {
@@ -51,6 +55,13 @@ export interface Portfolio {
   otherDebts: OtherDebt[];
 }
 
+export interface OwnerTotals {
+  felix: number;
+  kaki: number;
+  joint: number;
+  household: number;
+}
+
 export interface SnapshotTotals {
   netWorth: number;
   cash: number;
@@ -58,6 +69,7 @@ export interface SnapshotTotals {
   propertyEquity: number;
   shares: number;
   otherDebts: number;
+  owners: OwnerTotals;
 }
 
 export interface Snapshot {
@@ -73,3 +85,9 @@ export interface AppData {
   snapshots: Snapshot[];
   quoteCache: QuoteCache;
 }
+
+/** @deprecated Legacy field — migrated on read */
+export type LegacyLineItem = {
+  ownershipPercent?: number;
+  owner?: Owner;
+};

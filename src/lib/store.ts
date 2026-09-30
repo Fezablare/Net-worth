@@ -4,30 +4,27 @@ import {
   resetDataInFile,
   writeDataToFile,
 } from "./store-file";
+import { migrateAppData } from "./migrate";
 import type { AppData } from "./types";
 
 function isBlobStoreEnabled(): boolean {
-  return Boolean(
-    process.env.BLOB_READ_WRITE_TOKEN ||
-      process.env.BLOB_STORE_ID ||
-      process.env.VERCEL === "1",
-  );
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 }
 
 function assertPersistentStoreConfigured(): void {
   if (process.env.VERCEL === "1" && !isBlobStoreEnabled()) {
     throw new Error(
-      "Vercel deployment requires a Blob store. Create one in the Vercel project (BLOB_STORE_ID or BLOB_READ_WRITE_TOKEN).",
+      "Vercel deployment requires a Blob store. Create one in the Vercel project so BLOB_READ_WRITE_TOKEN is set.",
     );
   }
 }
 
 export async function readData(): Promise<AppData> {
   assertPersistentStoreConfigured();
-  if (isBlobStoreEnabled()) {
-    return readDataFromBlob();
-  }
-  return readDataFromFile();
+  const raw = isBlobStoreEnabled()
+    ? await readDataFromBlob()
+    : await readDataFromFile();
+  return migrateAppData(raw);
 }
 
 export async function writeData(data: AppData): Promise<void> {

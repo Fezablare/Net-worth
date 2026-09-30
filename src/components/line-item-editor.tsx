@@ -1,12 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { Trash2 } from "lucide-react";
-import { CategorySection } from "@/components/category-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { CategoryId } from "@/lib/categories";
 
 interface Field {
   key: string;
@@ -18,18 +15,16 @@ interface Field {
 
 interface LineItemEditorProps<T extends { id: string }> {
   title: string;
-  category: CategoryId;
   items: T[];
   fields: Field[];
   onChange: (items: T[]) => void;
   onAdd: () => T;
   maxItems?: number;
-  extra?: (item: T, index: number) => ReactNode;
+  extra?: (item: T, index: number) => React.ReactNode;
 }
 
 export function LineItemEditor<T extends { id: string }>({
   title,
-  category,
   items,
   fields,
   onChange,
@@ -48,23 +43,16 @@ export function LineItemEditor<T extends { id: string }>({
   }
 
   return (
-    <CategorySection
-      category={category}
-      title={title}
-      action={
-        (!maxItems || items.length < maxItems) && (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="bg-background/80"
-            onClick={() => onChange([...items, onAdd()])}
-          >
+    <section className="space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-base font-semibold">{title}</h3>
+        {(!maxItems || items.length < maxItems) && (
+          <Button type="button" variant="outline" size="sm" onClick={() => onChange([...items, onAdd()])}>
             Add
           </Button>
-        )
-      }
-    >
+        )}
+      </div>
+
       {items.length === 0 ? (
         <p className="text-sm text-muted-foreground">No items yet.</p>
       ) : (
@@ -72,7 +60,7 @@ export function LineItemEditor<T extends { id: string }>({
           {items.map((item, index) => (
             <div
               key={item.id}
-              className="space-y-3 rounded-xl border border-border/70 bg-background/85 p-4"
+              className="rounded-xl border bg-card p-4 space-y-3"
             >
               <div className="grid gap-3 sm:grid-cols-2">
                 {fields.map((field) => (
@@ -113,6 +101,6 @@ export function LineItemEditor<T extends { id: string }>({
           ))}
         </div>
       )}
-    </CategorySection>
+    </section>
   );
 }

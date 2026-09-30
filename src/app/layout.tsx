@@ -15,15 +15,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Net worth tracker",
-  description: "Personal net worth tracker in AUD — cash, super, property, and ASX shares.",
+  title: "LEDGER — Net worth",
+  description:
+    "Private AUD net worth ledger — cash, super, property, ASX shares, and monthly snapshots.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-AU"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>

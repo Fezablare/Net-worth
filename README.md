@@ -5,7 +5,8 @@ A personal net worth tracker in **AUD** for cash, super, three properties with m
 ## Features
 
 - **PIN gate** — simple env-based PIN so a shared URL is not enough to see your numbers
-- **This month editor** — update balances, ownership %, property values, and share tickers
+- **LEDGER UI** — dark three-page layout: This month (editor), Dashboard, History
+- **This month editor** — update balances, owner (Felix / Kaki / Joint), property values, and share tickers
 - **Live ASX quotes** — Yahoo Finance via `/api/quotes`, with stale last-good-price fallback and manual override
 - **Monthly snapshots** — one frozen copy per calendar month (confirm before replacing)
 - **Dashboard** — net worth, month-over-month change, history chart, allocation breakdown
